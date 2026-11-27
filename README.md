@@ -2,7 +2,7 @@
 
 > Versão convertida para o Antigravity a partir da skill original
 > (`~/.agents/skills/extract-ds`). O fluxo é o mesmo. Mudam os nomes das
-> ferramentas (`run_command`, `browser_subagent`, `read_url_content`) e os
+> ferramentas (`run_command`, MCP `chrome-devtools`, `read_url_content`) e os
 > comandos, que aqui usam PowerShell (`curl.exe`, `robocopy`, `Move-Item`).
 >
 > Crédito: a skill original é de [rtadewald/skills](https://github.com/rtadewald/skills).

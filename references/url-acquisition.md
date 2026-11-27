@@ -56,11 +56,15 @@ tables or RPCs. Use Route 2.
 
 ## Route 2: rendered capture in the browser
 
-Call `browser_subagent` with one precise task: open the URL, wait until the
-visible headline exists in the DOM, run the given JavaScript, and report its
-return value exactly. Paste the script into the task text. Ask for a short
-return value (counts, lengths, `ok`), never the page source: long results get
-cut. Then try the captures in this order.
+Use the `chrome-devtools` MCP server (from the claude-skills plugin): open the
+URL with `new_page`, then run each script below with `evaluate_script`. Make
+each script return a short value (counts, lengths, `ok`), never the page
+source: long results get cut. Then try the captures in this order.
+
+Do not use `browser_subagent` here. Tested on 27/11/2026, it refused to run
+JavaScript in the page and returned `BLOCKED` /
+`UNSUPPORTED_GUEST_JS_EVALUATION`. If `chrome-devtools` is not available,
+report it and ask the user to enable the MCP server.
 
 ### 2a. `iframe[srcdoc]` (best result)
 
@@ -102,9 +106,9 @@ $f = Get-ChildItem "$env:USERPROFILE\Downloads\extract-ds-source*.html" |
 Move-Item -LiteralPath $f.FullName "$SOURCE\index.html"
 ```
 
-If no file appears there, ask `browser_subagent` where the browser saved the
-download, then move it from that folder. Antigravity's browser may use its own
-profile with a different download folder.
+With `chrome-devtools`, the file landed in `%USERPROFILE%\Downloads` in the
+27/11/2026 test. If no file appears there, check the Chrome download settings
+of the profile `chrome-devtools` opened, then move the file from that folder.
 
 Inspection scripts in the browser must return counts or hostnames, not full
 URLs with query strings. Such results may hold cookie or query data, and the

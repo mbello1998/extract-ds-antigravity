@@ -20,7 +20,7 @@ This is the Antigravity edition. The steps name actions; use these tools:
 | Read a file or folder | `view_file`, `list_dir`, `find_by_name`, `grep_search` |
 | Create or edit a file | `write_to_file`, `replace_file_content`, `multi_replace_file_content` |
 | Static fetch of a URL | `read_url_content`, or `curl.exe` through `run_command` |
-| Open a page and run JavaScript in it | `browser_subagent` (URL acquisition only) |
+| Open a page and run JavaScript in it | `chrome-devtools` MCP: `new_page`, then `evaluate_script` (URL acquisition only). Not `browser_subagent`: it refuses page JavaScript with `UNSUPPORTED_GUEST_JS_EVALUATION` |
 | Track the phases | a task artifact (`write_to_file` with `IsArtifact: true`, `ArtifactType: "task"`) |
 
 On Windows PowerShell, `curl` is an alias for `Invoke-WebRequest`. Always type
@@ -73,7 +73,7 @@ handoff in about 1–2 minutes. The normal path is exactly:
 5. one structural handoff to the user.
 
 Do not inventory assets, trace every dependency, compare original and copy,
-generate contact sheets, open a browser (`browser_subagent` included), or
+generate contact sheets, open a browser (`chrome-devtools` and `browser_subagent` included), or
 broaden the handoff into an audit.
 Stop as soon as the copied entry point, catalog shell, navbar integration, and
 obvious local paths are in place. The user validates the rendered Overview.
@@ -92,7 +92,7 @@ In short:
    visible content, download it with its requisites into `$SOURCE` and
    continue on the fast path.
 2. If the HTML is an app shell (tiny body, empty root element, one large
-   platform bundle, visible text absent), open it with `browser_subagent` and capture
+   platform bundle, visible text absent), open it with the `chrome-devtools` MCP and capture
    the rendered page: an `iframe[srcdoc]` when present, otherwise the
    post-render DOM.
 3. Keep public storage and CDN asset URLs absolute.
@@ -246,7 +246,7 @@ Perform only cheap structural checks: confirm that `design-system.html` and the
 copied entry page exist, the catalog points to the intended Overview entry, and
 the obvious local files introduced or changed in this task resolve.
 
-Do not open Chrome, Chromium, Playwright, `browser_subagent`, an MCP browser, or another browser. Do
+Do not open Chrome, Chromium, Playwright, `chrome-devtools`, `browser_subagent`, an MCP browser, or another browser. Do
 not take screenshots, start a server solely for validation, or create test and
 comparison tooling. Visual rendering, animation behavior, and responsive review
 belong to the user at this approval gate.
