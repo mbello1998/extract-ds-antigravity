@@ -274,6 +274,35 @@ Components view, reusing its original implementation and assets rather than
 recreating or flattening it. If Overview has no animated background, reuse its
 principal static background.
 
+Two tested techniques for this layout:
+
+- **Background-only mode.** When the animated background is driven by the
+  Overview's main script (canvas, WebGL, Three.js), do not copy that script into
+  Components: it expects the full page and stops at the first missing element.
+  Add a small flag to the copied Overview instead, then embed it as the
+  background:
+
+  ```html
+  <!-- in assets/overview/index.html, inside <head> -->
+  <script>if(/[?&]bg(&|$)/.test(location.search)){document.documentElement.classList.add('ds-bg');}</script>
+  <style>.ds-bg main,.ds-bg footer,.ds-bg .scroll-progress,.ds-bg .skip-link{display:none!important;}</style>
+  ```
+
+  ```html
+  <!-- in Components, first element of <body> -->
+  <iframe class="ds-live-bg" src="../overview/index.html?bg" aria-hidden="true" tabindex="-1"
+    style="position:fixed;inset:0;width:100%;height:100%;border:0;z-index:0;pointer-events:none"></iframe>
+  ```
+
+  Adjust the hidden selectors to the page: hide every content wrapper and keep
+  only the background layers. Without `?bg` the Overview renders unchanged. Reuse
+  the same iframe, sized to the specimen, for the animated entry in the
+  Backgrounds group.
+- **Grid overflow.** With a `grid-template-columns: <sidebar> 1fr` layout, set
+  `min-width: 0` on the main column. Without it, a `width: max-content` element
+  such as a marquee track widens the column past the viewport and pushes the
+  right side of the specimens off screen.
+
 Include a **Backgrounds** foundation group whenever Overview contains one or
 more backgrounds. Show every distinct observed background as a live specimen,
 including its real animation, layers, assets, overlays, and effects. Do not use
