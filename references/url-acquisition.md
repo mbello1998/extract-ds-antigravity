@@ -65,12 +65,18 @@ cut. Then try the captures in this order.
 ### 2a. `iframe[srcdoc]` (best result)
 
 Many builders sandbox the published page in an iframe whose `srcdoc` holds the
-original page source before any script ran. Check:
+original page source before any script ran. The iframe can take more than 4
+seconds to appear, and the outer page has no headline of its own, so poll for
+the iframe (up to 20 seconds) before checking. An empty list on the first
+check is not a missing iframe:
 
 ```js
+for (let i = 0; i < 40 && !document.querySelector('iframe[srcdoc]'); i++) {
+  await new Promise(r => setTimeout(r, 500));
+}
 JSON.stringify([...document.querySelectorAll('iframe')].map(f => ({
   srcdoc: (f.getAttribute('srcdoc') || '').length,
-  src: f.getAttribute('src'),
+  src: f.getAttribute("src") ? "yes" : "no",
   w: f.offsetWidth, h: f.offsetHeight
 })));
 ```
